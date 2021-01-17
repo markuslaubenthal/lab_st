@@ -4,7 +4,10 @@ import h5py
 import os
 
 def getFileHandler(filename):
-    f = h5py.File(filename, 'r+')
+    if os.path.isfile(filename):
+        f = h5py.File(filename, 'r+')
+    else:
+        f = h5py.File(filename, 'w')
     return f
 
 def generate_label(grid, max_lookback, f):
