@@ -16,3 +16,4 @@ class SplitDenseNetFactory():
 
         combined = layers.Flatten()(combined)
         model = tf.keras.models.Model([period_input, closeness_input], combined)
+        return model
