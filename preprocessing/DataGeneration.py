@@ -10,7 +10,7 @@ def getFileHandler(filename):
         f = h5py.File(filename, 'w')
     return f
 
-def generate_label(grid, max_lookback, f):
+def generate_label(grid, max_lookback=168, f):
     dataset_name = 'label'
     y = grid[max_lookback:]
     y = y.reshape((y.shape[0], -1))
@@ -23,7 +23,7 @@ def generate_label(grid, max_lookback, f):
     return h5_dataset
 
 
-def generate_dataset(grid, lookback, max_lookback, f, dataset_name):
+def generate_dataset(grid, lookback, max_lookback=168, f, dataset_name):
     if dataset_name in f:
         del f[dataset_name]
     h5_dataset = f.create_dataset(dataset_name,
