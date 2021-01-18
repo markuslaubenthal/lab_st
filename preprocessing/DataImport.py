@@ -3,11 +3,13 @@ import pandas as pd
 import cv2
 import h5py
 
-def load_and_scale_internet(path, f):
+def load_and_scale_internet(path, f, log10 = True):
     internet_origin = pd.read_csv(path , index_col='index')
     internet_origin.fillna(0.0, inplace=True)
     internet_origin = internet_origin.to_numpy()
-    internet = np.log10(internet_origin + 1)
+    internet = internet_origin.copy()
+    if(log10):
+        internet = np.log10(internet + 1)
     internet_max = internet.max(axis=1)
     internet_min = internet.min(axis=1)
     internet = (internet - internet_min[:,np.newaxis]) / (internet_max - internet_min)[:,np.newaxis]
