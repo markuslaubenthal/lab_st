@@ -3,9 +3,9 @@ import pandas as pd
 import cv2
 import h5py
 
-def load_and_scale_internet(path='input/f_internet_ML.csv', f):
-
+def load_and_scale_internet(path='input/internet_ML.csv', f):
     internet_origin = pd.read_csv(path , index_col='index')
+    internet_origin.fillna(0.0, inplace=True)
     internet_origin = internet_origin.to_numpy()
     internet = np.log10(internet_origin + 1)
     internet_max = internet.max(axis=1)
