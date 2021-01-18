@@ -3,7 +3,7 @@ import pandas as pd
 import cv2
 import h5py
 
-def load_and_scale_internet(f, path='input/internet_ML.csv'):
+def load_and_scale_internet(path, f):
     internet_origin = pd.read_csv(path , index_col='index')
     internet_origin.fillna(0.0, inplace=True)
     internet_origin = internet_origin.to_numpy()
@@ -27,7 +27,7 @@ def load_and_scale_internet(f, path='input/internet_ML.csv'):
 
     return h5_dataset_internent, h5_dataset_internent_origin, internet_min, internet_max
 
-def load_and_scale_satelite(path='input/satelite.png', f):
+def load_and_scale_satelite(path, f):
     satelite = cv2.imread(path)
     satelite = (satelite - satelite.min()) / (satelite.max() - satelite.min())
     satelite = np.flip(satelite, axis=0)
@@ -40,7 +40,7 @@ def load_and_scale_satelite(path='input/satelite.png', f):
 
     return h5_dataset
 
-def load_and_scale_social(path='input/social_pulse_ML.csv', f):
+def load_and_scale_social(path, f):
     social = pd.read_csv(path, index_col=0)
     social = social.to_numpy()
     social = (social - social.min(axis=1)[:,np.newaxis]) / (social.max(axis=1) - social.min(axis=1) + 1)[:,np.newaxis]
@@ -54,7 +54,7 @@ def load_and_scale_social(path='input/social_pulse_ML.csv', f):
 
     return h5_dataset
 
-def load_and_scale_weather(path='input/weather.csv', f):
+def load_and_scale_weather(path, f):
     weather = pd.read_csv(path, index_col=0)
     weather = weather.to_numpy()
     weather = (weather - weather.min(axis=1)[:,np.newaxis]) / (weather.max(axis=1) - weather.min(axis=1) + 1)[:,np.newaxis]
