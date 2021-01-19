@@ -12,7 +12,7 @@ class DenseNetFactory():
     def __init__(self):
         self.concat_axis = 3
         self.eps = 1.1e-5
-        self.growth_rate = growth_rate
+        self.growth_rate = 8
         self.initial_filters = 8
         self.num_conv_layer = 8
         self.weight_decay = 1e-4
