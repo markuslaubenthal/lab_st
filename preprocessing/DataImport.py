@@ -3,7 +3,7 @@ import pandas as pd
 import cv2
 import h5py
 
-def load_and_scale_internet(path, f, log10 = True):
+def load_and_scale_internet(path, f, log10 = True, min_max_axis=1):
     internet_origin = pd.read_csv(path , index_col='index')
     internet_origin.fillna(0.0, inplace=True)
     internet_origin = internet_origin.to_numpy()
