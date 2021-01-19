@@ -9,7 +9,7 @@ import numpy as np
 
 class DenseNetFactory():
 
-    def __init__(self):
+    def __init__(self, growth_rate = 8):
         self.concat_axis = 3
         self.eps = 1.1e-5
         self.growth_rate = 4
