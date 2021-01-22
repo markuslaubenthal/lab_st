@@ -36,10 +36,10 @@ class SplitDenseNetFactory():
         combined = layers.Add()([combined, time_mult])
         # combined, input = dn_factory.Model(prefix="Final_DenseNet", input=combined)
         # combined = layers.Conv2D(1, (1,1))(combined)
-        combined = layers.Multiply()([combined, attention_conv])
+        combined = layers.Matmul()([combined, attention_conv])
 
 
-        combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
+        combined = layers.Activation('linear', name="output_sigmoid")(combined)
 
         combined = layers.Flatten()(combined)
         model = tf.keras.models.Model([period_input, closeness_input, time_input], combined)
