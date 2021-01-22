@@ -25,6 +25,7 @@ class SplitDenseNetFactory():
 
         attention_input = layers.Concatenate(axis=3)([closeness_input, period_input])
         # attention_layer = layers.MultiHeadAttention(num_heads=2, key_dim=2, attention_axes=3)(attention_input, attention_input)
+
         attention_conv = layers.Conv1D(1,1)(attention_input)
         # attention_bn = layers.BatchNormalization()(attention_conv)
 
@@ -32,11 +33,11 @@ class SplitDenseNetFactory():
         time_model, time_input = te_factory.Model(input_shape=time_shape)
 
         combined = layers.Add()([period_dependency_model, closeness_dependency_model])
-        time_mult = layers.Multiply()([combined, time_model])
-        combined = layers.Add()([combined, time_mult])
+        # time_mult = layers.Multiply()([combined, time_model])
+        # combined = layers.Add()([combined, time_mult])
         # combined, input = dn_factory.Model(prefix="Final_DenseNet", input=combined)
         # combined = layers.Conv2D(1, (1,1))(combined)
-        combined = layers.Dot(axes=(1,2))([combined, attention_conv])
+        combined = layers.Dot(axes=(3))([combined, attention_conv])
 
 
         combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
