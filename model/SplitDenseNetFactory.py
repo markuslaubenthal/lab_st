@@ -24,8 +24,8 @@ class SplitDenseNetFactory():
 
 
         attention_input = layers.Concatenate(axis=3)([closeness_input, period_input])
-        attention_layer = layers.MultiHeadAttention(num_heads=2, key_dim=2, attention_axes=3)(attention_input, attention_input)
-        attention_conv = layers.Conv1D(1,1)(attention_layer)
+        # attention_layer = layers.MultiHeadAttention(num_heads=2, key_dim=2, attention_axes=3)(attention_input, attention_input)
+        attention_conv = layers.Conv1D(1,1)(attention_input)
         # attention_bn = layers.BatchNormalization()(attention_conv)
 
 
@@ -39,7 +39,7 @@ class SplitDenseNetFactory():
         combined = layers.Dot(axes=(1,2))([combined, attention_conv])
 
 
-        combined = layers.Activation('linear', name="output_sigmoid")(combined)
+        combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
 
         combined = layers.Flatten()(combined)
         model = tf.keras.models.Model([period_input, closeness_input, time_input], combined)
