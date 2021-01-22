@@ -25,9 +25,10 @@ class SplitDenseNetFactory():
         time_model, time_input = te_factory.Model(input_shape=time_shape)
 
         combined = layers.Add()([period_dependency_model, closeness_dependency_model])
-        combined = layers.Concatenate(axis=3)([combined, time_model])
-        combined, input = dn_factory.Model(prefix="Final_DenseNet", input=combined)
-        combined = layers.Conv2D(1, (1,1))(combined)
+        time_mult = layers.Mult()([combined, time_model])
+        combined = layers.Add()([combined, time_mult])
+        # combined, input = dn_factory.Model(prefix="Final_DenseNet", input=combined)
+        # combined = layers.Conv2D(1, (1,1))(combined)
         combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
 
         combined = layers.Flatten()(combined)
