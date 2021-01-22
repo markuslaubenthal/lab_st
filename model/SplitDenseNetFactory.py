@@ -38,7 +38,7 @@ class SplitDenseNetFactory():
         # combined, input = dn_factory.Model(prefix="Final_DenseNet", input=combined)
         # combined = layers.Conv2D(1, (1,1))(combined)
         attention_matrix = layers.Dot(axes=(3,3))([attention_conv, attention_conv])
-        combined = layers.Dot(axes=(5,3))([attention_matrix, combined])
+        combined = layers.Dot(axes=(3,3))([attention_matrix, combined])
 
 
         combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
