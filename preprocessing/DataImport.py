@@ -18,8 +18,8 @@ def load_and_scale_internet(path, f, log10 = True, min_max_axis=1):
         internet_max = internet.max()
         internet_min = internet.min()
     else:
-        internet_max = internet.max(axis=min_max_axis).reshape(1,10000)
-        internet_min = internet.min(axis=min_max_axis).reshape(1,10000)
+        internet_max = internet.max(axis=min_max_axis).reshape(10000,1)
+        internet_min = internet.min(axis=min_max_axis).reshape(10000,1)
     internet = (internet - internet_min) / (internet_max - internet_min)
     internet = internet.T.reshape((1488,100,100))
 
