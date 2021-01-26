@@ -73,5 +73,5 @@ class SplitDenseNetFactory():
             time_model = layers.Multiply()([time_output, t_m1_input])
             model = layers.Concatenate(axis=3)([time_model, model])
             model = HadamardLayer()(model)
-            model = layers.Conv1D(1,1)(model)
+            model = layers.Conv1D(1,1, use_bias=False)(model)
             return model
