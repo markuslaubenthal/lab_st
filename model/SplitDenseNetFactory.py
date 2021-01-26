@@ -37,7 +37,7 @@ class SplitDenseNetFactory():
 
         t_m1_input = None
         if t_minus_one:
-            t_m1_input = keras.Input(name="t_minus_1_input", input_shape=(100,100,1))
+            t_m1_input = tf.keras.Input(name="t_minus_1_input", input_shape=(100,100,1))
             inputs.append(t_m1_input)
 
         combined = layers.Add()([period_dependency_model, closeness_dependency_model])
