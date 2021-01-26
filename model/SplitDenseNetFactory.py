@@ -7,16 +7,25 @@ class SplitDenseNetFactory():
         self.x = 0
 
 
-    def Model(self, closeness_length=3, period_length=3, time_shape=(24+7+1,), time_embedding_method=None, t_minus_one=False):
+    def Model(self,
+            closeness_length=3,
+            period_length=3,
+            time_shape=(24+7+1,),
+            growth_rate = 8,
+            initial_filters = 8,
+            depth = 8,
+            time_embedding_method=None,
+            t_minus_one=False):
+
         dn_factory = DenseNetFactory()
+        dn_factory.growth_rate = growth_rate
+        dn_factory.initial_filters = initial_filters
+        dn_factory.num_conv_layer = depth
         te_factory = TimeEmbeddingFactory()
 
         # if time_embedding_method == "in_front":
         #     time_model, time_input = te_factory.Model(input_shape=time_shape)
         #     time_embedding = self.TimeEmbeddingMethod(time_model, combined, method=time_embedding_method)
-
-
-
 
 
         period_dependency_model, period_input = dn_factory.Model(prefix="period_dependency", input_shape=(100,100,period_length))
@@ -37,8 +46,6 @@ class SplitDenseNetFactory():
 
         combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
         combined = layers.Flatten()(combined)
-
-
 
         model = tf.keras.models.Model(inputs, combined)
         return model
