@@ -2,6 +2,9 @@ from .DenseNetFactory import DenseNetFactory
 from .TimeEmbeddingFactory import TimeEmbeddingFactory
 import tensorflow as tf
 from tensorflow.keras import layers
+from .HadamardLayer import HadamardLayer
+
+
 class SplitDenseNetFactory():
     def __init__(self):
         self.x = 0
