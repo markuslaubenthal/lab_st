@@ -64,5 +64,5 @@ class DenseNetFactory():
                 x = concatenationLayer
         model = layers.Conv1D(1,1, use_bias=False)(x) #Add activation Layer
         model = layers.Activation('linear')(model)
-        # model = HadamardLayer(name = prefix + "_hadamard1")(model)
+        model = HadamardLayer(name = prefix + "_hadamard1")(model)
         return model, input
