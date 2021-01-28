@@ -56,7 +56,7 @@ class SplitDenseNetFactory():
             combined = self.TimeEmbeddingMethod(time_model, combined, method=time_embedding_method, t_m1_input=t_m1_input)
             inputs.append(time_input)
 
-        combined = layers.Activation('relu', name="output_sigmoid")(combined)
+        combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
         combined = layers.Flatten()(combined)
 
         model = tf.keras.models.Model(inputs, combined)
