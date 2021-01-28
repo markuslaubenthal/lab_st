@@ -20,9 +20,9 @@ class DenseNetFactory():
         self.weight_decay = 1e-4
         self.kernel_size = (3,3)
         self.kernel_regularizer = l2(self.weight_decay)
-        self.kernel_regularizer = None
+        # self.kernel_regularizer = None
         self.use_bias = False
-        self.use_bias = True
+        # self.use_bias = True
 
     def ConvLayer(self, x, name):
         x = layers.Conv2D(
@@ -36,10 +36,10 @@ class DenseNetFactory():
         return x
 
     def DenseLayer(self, x, prefix, index):
-        # x = layers.BatchNormalization(
-        #     epsilon=self.eps,
-        #     axis=self.concat_axis,
-        #     name = prefix + '_bn_dense' + str(index))(x)
+        x = layers.BatchNormalization(
+            epsilon=self.eps,
+            axis=self.concat_axis,
+            name = prefix + '_bn_dense' + str(index))(x)
         x = layers.Activation(
             'relu',
             name = prefix + '_relu_dense' + str(index))(x)
@@ -63,5 +63,5 @@ class DenseNetFactory():
         # model = layers.Concatenate(axis=self.concat_axis)([input, x])
         model = layers.Conv1D(1,1, use_bias=False)(x) #Add activation Layer
         model = layers.Activation('relu')(model)
-        model = HadamardLayer(name = prefix + "_hadamard1")(model)
+        # model = HadamardLayer(name = prefix + "_hadamard1")(model)
         return model, input
