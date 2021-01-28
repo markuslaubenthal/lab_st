@@ -21,8 +21,8 @@ class DenseNetFactory():
         self.kernel_size = (3,3)
         self.kernel_regularizer = l2(self.weight_decay)
         # self.kernel_regularizer = None
-        self.use_bias = False
-        # self.use_bias = True
+        # self.use_bias = False
+        self.use_bias = True
 
     def ConvLayer(self, x, name):
         x = layers.Conv2D(
@@ -60,7 +60,6 @@ class DenseNetFactory():
             else:
                 concatenationLayer = layers.Concatenate(axis=self.concat_axis)([x, concatenationLayer])
                 x = concatenationLayer
-        # model = layers.Concatenate(axis=self.concat_axis)([input, x])
         model = layers.Conv1D(1,1, use_bias=False)(x) #Add activation Layer
         model = layers.Activation('linear')(model)
         # model = HadamardLayer(name = prefix + "_hadamard1")(model)
