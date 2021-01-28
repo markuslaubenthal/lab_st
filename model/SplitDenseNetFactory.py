@@ -3,7 +3,7 @@ from .TimeEmbeddingFactory import TimeEmbeddingFactory
 import tensorflow as tf
 from tensorflow.keras import layers
 from .HadamardLayer import HadamardLayer
-
+import tf.keras.backend as K
 
 class SplitDenseNetFactory():
     def __init__(self):
@@ -82,5 +82,6 @@ class SplitDenseNetFactory():
             time_model = layers.Multiply()([time_output, t_m1_input])
             model = layers.Concatenate(axis=3)([time_model, model])
             model = HadamardLayer()(model)
-            model = layers.Conv1D(1,1, use_bias=False)(model)
+            model = layers.Lambda(lambda x: K.sum(x, axis=3)
+            # model = layers.Conv1D(1,1, use_bias=False)(model)
             return model
