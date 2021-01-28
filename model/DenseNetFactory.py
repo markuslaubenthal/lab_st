@@ -64,5 +64,6 @@ class DenseNetFactory():
                 x = concatenationLayer
         model = layers.Conv1D(4,1, use_bias=False)(x) #Add activation Layer
         model = HadamardLayer(name = prefix + "_hadamard1")(model)
+        model = layers.Lambda(lambda x: K.sum(x, axis=3))(model)
         model = layers.Activation('linear')(model)
         return model, input
