@@ -3,7 +3,7 @@ from .TimeEmbeddingFactory import TimeEmbeddingFactory
 import tensorflow as tf
 from tensorflow.keras import layers
 from .HadamardLayer import HadamardLayer
-import tf.keras.backend as K
+import tensorflow.keras.backend as K
 
 class SplitDenseNetFactory():
     def __init__(self):
