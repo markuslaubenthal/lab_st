@@ -46,10 +46,10 @@ class SplitDenseNetFactory():
             t_m1_input = tf.keras.Input(name="t_minus_1_input", shape=(100,100,1))
             inputs.append(t_m1_input)
 
-        if(len(_models) > 1):
-            combined = layers.Add()(_models)
+        if(len(models) > 1):
+            combined = layers.Add()(models)
         else:
-            combined = _models[0]
+            combined = models[0]
 
         if time_embedding_method is not None:
             time_model, time_input = te_factory.Model(input_shape=time_shape)
