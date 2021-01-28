@@ -31,15 +31,16 @@ class SplitDenseNetFactory():
 
 
 
-        grid_inputs = []
+        # grid_inputs = []
         models = []
+        inputs = []
         for i, input in enumerate(input_length):
             _model, _input = dn_factory.Model(prefix=str(i) + "_dependency", input_shape=(100,100,input))
-            grid_inputs.append(_input)
+            inputs.append(_input)
             models.append(_model)
         # period_dependency_model, period_input = dn_factory.Model(prefix="period_dependency", input_shape=(100,100,period_length))
         # closeness_dependency_model, closeness_input = dn_factory.Model(prefix="closeness_dependency", input_shape=(100,100,closeness_length))
-        inputs = grid_inputs
+        # inputs = grid_inputs.copy()
 
         t_m1_input = None
         if t_minus_one:
