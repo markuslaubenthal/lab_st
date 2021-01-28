@@ -50,7 +50,8 @@ class DenseNetFactory():
     def Model(self, prefix="standard", input_shape=None, input=None):
         if input is None:
             input = layers.Input(shape=input_shape, name = prefix + '_input')
-        x = self.ConvLayer(input, prefix + '_init_conv')
+        # x = self.ConvLayer(input, prefix + '_init_conv')
+        x = input
         concatenationLayer = None
         for i in range(self.num_conv_layer):
             x = self.DenseLayer(x, prefix, i)
