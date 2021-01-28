@@ -18,7 +18,7 @@ class DenseNetFactory():
         self.initial_filters = 8
         self.num_conv_layer = 8
         self.weight_decay = 1e-4
-        self.kernel_size = (3,3)
+        self.kernel_size = (1,1)
         self.kernel_regularizer = l2(self.weight_decay)
         # self.kernel_regularizer = None
         self.use_bias = False
