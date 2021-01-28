@@ -6,6 +6,8 @@ from .HadamardLayer import HadamardLayer
 from keras.regularizers import l2
 import numpy as np
 
+import tensorflow.keras.backend as K
+
 
 class DenseNetFactory():
 
