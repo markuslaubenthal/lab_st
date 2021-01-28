@@ -20,8 +20,10 @@ class DenseNetFactory():
         self.weight_decay = 1e-4
         self.kernel_size = (3,3)
         self.kernel_regularizer = l2(self.weight_decay)
-        # self.kernel_regularizer = None
-        # self.use_bias = False
+        self.use_bias = False
+
+        
+        self.kernel_regularizer = None
         self.use_bias = True
 
     def ConvLayer(self, x, name):
