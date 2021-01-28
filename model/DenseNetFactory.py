@@ -36,10 +36,10 @@ class DenseNetFactory():
         return x
 
     def DenseLayer(self, x, prefix, index):
-        x = layers.BatchNormalization(
-            epsilon=self.eps,
-            axis=self.concat_axis,
-            name = prefix + '_bn_dense' + str(index))(x)
+        # x = layers.BatchNormalization(
+        #     epsilon=self.eps,
+        #     axis=self.concat_axis,
+        #     name = prefix + '_bn_dense' + str(index))(x)
         x = layers.Activation(
             'relu',
             name = prefix + '_relu_dense' + str(index))(x)
