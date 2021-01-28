@@ -11,8 +11,7 @@ class SplitDenseNetFactory():
 
 
     def Model(self,
-            closeness_length=3,
-            period_length=3,
+            input_length=(63,),
             time_shape=(24+7+1,),
             growth_rate = 8,
             initial_filters = 8,
@@ -31,16 +30,26 @@ class SplitDenseNetFactory():
         #     time_embedding = self.TimeEmbeddingMethod(time_model, combined, method=time_embedding_method)
 
 
-        period_dependency_model, period_input = dn_factory.Model(prefix="period_dependency", input_shape=(100,100,period_length))
-        closeness_dependency_model, closeness_input = dn_factory.Model(prefix="closeness_dependency", input_shape=(100,100,closeness_length))
-        inputs = [period_input, closeness_input]
+
+        grid_inputs = []
+        models = []
+        for i, input in enumerate(input_length):
+            _model, _input = dn_factory.Model(prefix=str(i) + "_dependency", input_shape=(100,100,input))
+            grid_inputs.append(_input)
+            models.append(_model)
+        # period_dependency_model, period_input = dn_factory.Model(prefix="period_dependency", input_shape=(100,100,period_length))
+        # closeness_dependency_model, closeness_input = dn_factory.Model(prefix="closeness_dependency", input_shape=(100,100,closeness_length))
+        inputs = grid_inputs.copy()
 
         t_m1_input = None
         if t_minus_one:
             t_m1_input = tf.keras.Input(name="t_minus_1_input", shape=(100,100,1))
             inputs.append(t_m1_input)
 
-        combined = layers.Add()([period_dependency_model, closeness_dependency_model])
+        if(len(inputs) > 1):
+            combined = layers.Add()(grid_inputs)
+        else:
+            combined = inputs[0]
 
         if time_embedding_method is not None:
             time_model, time_input = te_factory.Model(input_shape=time_shape)
