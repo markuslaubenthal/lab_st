@@ -8,7 +8,7 @@ class HadamardLayer(Layer):
         super(HadamardLayer, self).__init__(**kwargs)
 
     def build(self, input_shape):
-        initial_weight_value = np.random.random(input_shape[1:])
+        initial_weight_value = np.random.random(input_shape[1:]) - 0.5
         self.W = K.variable(initial_weight_value)
         self._trainable_weights = [self.W]
 
