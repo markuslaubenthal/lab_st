@@ -18,7 +18,7 @@ class DenseNetFactory():
         self.initial_filters = 8
         self.num_conv_layer = 8
         self.weight_decay = 1e-4
-        self.kernel_size = (1,1)
+        self.kernel_size = (3,3)
         self.kernel_regularizer = l2(self.weight_decay)
         # self.kernel_regularizer = None
         self.use_bias = False
@@ -60,9 +60,7 @@ class DenseNetFactory():
                 concatenationLayer = layers.Concatenate(axis=self.concat_axis)([x, concatenationLayer])
                 x = concatenationLayer
         model = layers.Concatenate(axis=self.concat_axis)([input, x])
+        model = layers.Conv1D(1,1, use_bias=False)(model) #Add activation Layer
+        model = layers.Activation('relu')(model)
         model = HadamardLayer(name = prefix + "_hadamard1")(model)
-        model = layers.Lambda(lambda x: K.sum(x, axis=3))(model)
-        # model = layers.Conv1D(1,1, use_bias=False)(model) #Add activation Layer
-        # model = layers.Activation('relu')(model)
-        # model = HadamardLayer(name = prefix + "_hadamard2")(model)
         return model, input
