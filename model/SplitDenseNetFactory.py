@@ -60,6 +60,7 @@ class SplitDenseNetFactory():
 
 
         combined = layers.Flatten()(combined)
+        combined = layers.Reshape((-1,1))(combined)
         input_concatenation = layers.Concatenate(axis=3)(grid_inputs)
         input_concatenation = layers.Reshape((100*100, -1, 1))(input_concatenation)
         print(input_concatenation)
