@@ -59,14 +59,17 @@ class SplitDenseNetFactory():
             inputs.append(time_input)
 
 
+        combined = layers.Flatten()(combined)
         input_concatenation = layers.Concatenate(axis=3)(grid_inputs)
+        input_concatenation = layers.Reshape((100*100, -1))(input_concatenation)
+        input_concatenation = layers.Permute((2,1))(input_concatenation)
+        input_concatenation = layers.Conv1D(32,1)(input_concatenation)
+        input_concatenation = layers.Permute((2,1))(input_concatenation)
+
         combined = layers.Attention()([input_concatenation, combined, input_concatenation])
-
-
 
         combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
         combined = layers.Flatten()(combined)
-
         model = tf.keras.models.Model(inputs, combined)
         return model
 
