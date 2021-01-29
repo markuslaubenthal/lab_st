@@ -31,12 +31,13 @@ class SplitDenseNetFactory():
 
 
 
-        # grid_inputs = []
+        grid_inputs = []
         models = []
         inputs = []
         for i, input in enumerate(input_length):
             _model, _input = dn_factory.Model(prefix=str(i) + "_dependency", input_shape=(100,100,input))
             inputs.append(_input)
+            grid_inputs.append(_input)
             models.append(_model)
         # period_dependency_model, period_input = dn_factory.Model(prefix="period_dependency", input_shape=(100,100,period_length))
         # closeness_dependency_model, closeness_input = dn_factory.Model(prefix="closeness_dependency", input_shape=(100,100,closeness_length))
@@ -56,6 +57,12 @@ class SplitDenseNetFactory():
             time_model, time_input = te_factory.Model(input_shape=time_shape)
             combined = self.TimeEmbeddingMethod(time_model, combined, method=time_embedding_method, t_m1_input=t_m1_input)
             inputs.append(time_input)
+
+
+        input_concatenation = layers.Concatenate(axis=3)(grid_inputs)
+        combined = layers.Attention()(input_concatenation, input_concatenation, combined)
+
+
 
         combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
         combined = layers.Flatten()(combined)
