@@ -60,7 +60,7 @@ class SplitDenseNetFactory():
 
 
         input_concatenation = layers.Concatenate(axis=3)(grid_inputs)
-        combined = layers.Attention()(input_concatenation, input_concatenation, combined)
+        combined = layers.Attention()([input_concatenation, combined, input_concatenation])
 
 
 
