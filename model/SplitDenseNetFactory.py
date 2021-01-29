@@ -68,7 +68,7 @@ class SplitDenseNetFactory():
         print(input_concatenation)
         input_concatenation = layers.Reshape((100*100, -1))(input_concatenation)
         print(input_concatenation)
-        combined = layers.MultiHeadAttention(num_heads=2, key_dim=4, output_shape=(100*100,1))(input_concatenation, combined, input_concatenation)
+        combined = layers.MultiHeadAttention(num_heads=2, key_dim=4)(input_concatenation, input_concatenation, input_concatenation)
         print(combined)
         combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
         combined = layers.Flatten()(combined)
