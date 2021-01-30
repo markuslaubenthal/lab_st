@@ -42,7 +42,7 @@ class SplitDenseNetFactory():
         # closeness_dependency_model, closeness_input = dn_factory.Model(prefix="closeness_dependency", input_shape=(100,100,closeness_length))
         # inputs = grid_inputs.copy()
 
-        weather_input = keras.Input(shape=(4,))
+        weather_input = tf.keras.Input(shape=(4,))
         weather_dense = layers.Dense(32, activation="sigmoid")(weather_input)
         weather_dense = layers.Dense(100*100, activation="sigmoid")(weather_dense)
         weather_dense = layers.Lambda(lambda x: x*2)(weather_dense)
