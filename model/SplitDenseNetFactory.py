@@ -42,6 +42,13 @@ class SplitDenseNetFactory():
         # closeness_dependency_model, closeness_input = dn_factory.Model(prefix="closeness_dependency", input_shape=(100,100,closeness_length))
         # inputs = grid_inputs.copy()
 
+        weather_input = keras.Input(shape=(4,))
+        weather_dense = layers.Dense(32, activation="sigmoid")(weather_input)
+        weather_dense = layers.Dense(100*100, activation="sigmoid")(weather_dense)
+        weather_dense = layers.Lambda(lambda x: x*2)(weather_dense)
+        weather_dense = layers.Reshape((100,100,1))(weather_dense)
+        inputs.append(weather_input)
+
         t_m1_input = None
         if t_minus_one:
             t_m1_input = tf.keras.Input(name="t_minus_1_input", shape=(100,100,1))
@@ -57,6 +64,7 @@ class SplitDenseNetFactory():
             combined = self.TimeEmbeddingMethod(time_model, combined, method=time_embedding_method, t_m1_input=t_m1_input)
             inputs.append(time_input)
 
+        combined = layers.Multiply()([weather_dense, combined])
         combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
         combined = layers.Flatten()(combined)
 
