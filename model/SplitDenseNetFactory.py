@@ -4,13 +4,27 @@ from .DenseNetFactory import DenseNetFactory
 from .TimeEmbeddingFactory import TimeEmbeddingFactory
 import tensorflow as tf
 from tensorflow.keras import layers
+from .HadamardLayer import HadamardLayer
+import tensorflow.keras.backend as K
+
 class SplitDenseNetFactory():
     def __init__(self):
         self.x = 0
 
 
-    def Model(self, closeness_length=3, period_length=3, time_shape=(24+7+1,), time_embedding_method=None, t_minus_one=False):
+    def Model(self,
+            input_length=(63,),
+            time_shape=(24+7+1,),
+            growth_rate = 8,
+            initial_filters = 8,
+            depth = 8,
+            time_embedding_method=None,
+            t_minus_one=False):
+
         dn_factory = DenseNetFactory()
+        dn_factory.growth_rate = growth_rate
+        dn_factory.initial_filters = initial_filters
+        dn_factory.num_conv_layer = depth
         te_factory = TimeEmbeddingFactory()
 
         # if time_embedding_method == "in_front":
@@ -19,29 +33,43 @@ class SplitDenseNetFactory():
 
 
 
-
-
-        period_dependency_model, period_input = dn_factory.Model(prefix="period_dependency", input_shape=(100,100,period_length))
-        closeness_dependency_model, closeness_input = dn_factory.Model(prefix="closeness_dependency", input_shape=(100,100,closeness_length))
-        inputs = [period_input, closeness_input]
+        grid_inputs = []
+        models = []
+        inputs = []
+        for i, input in enumerate(input_length):
+            _model, _input = dn_factory.Model(prefix=str(i) + "_dependency", input_shape=(100,100,input))
+            inputs.append(_input)
+            grid_inputs.append(_input)
+            models.append(_model)
+        # period_dependency_model, period_input = dn_factory.Model(prefix="period_dependency", input_shape=(100,100,period_length))
+        # closeness_dependency_model, closeness_input = dn_factory.Model(prefix="closeness_dependency", input_shape=(100,100,closeness_length))
+        # inputs = grid_inputs.copy()
 
         t_m1_input = None
         if t_minus_one:
-            t_m1_input = keras.Input(name="t_minus_1_input", input_shape=(100,100,1))
+            t_m1_input = tf.keras.Input(name="t_minus_1_input", shape=(100,100,1))
             inputs.append(t_m1_input)
 
-        combined = layers.Add()([period_dependency_model, closeness_dependency_model])
+        if(len(models) > 1):
+            combined = layers.Add()(models)
+        else:
+            combined = models[0]
 
         if time_embedding_method is not None:
             time_model, time_input = te_factory.Model(input_shape=time_shape)
             combined = self.TimeEmbeddingMethod(time_model, combined, method=time_embedding_method, t_m1_input=t_m1_input)
             inputs.append(time_input)
 
+
+        combined = layers.Flatten()(combined)
+        combined = layers.Reshape((-1,1))(combined)
+        input_concatenation = layers.Concatenate(axis=3)(grid_inputs)
+        input_concatenation = layers.Reshape((100*100, -1, 1))(input_concatenation)
+        input_concatenation = layers.Conv2D(64, (1,3), padding="same")(input_concatenation)
+        input_concatenation = layers.Reshape((100*100, -1))(input_concatenation)
+        combined = layers.MultiHeadAttention(num_heads=2, key_dim=4, output_shape=(1,))(input_concatenation, combined, input_concatenation)
         combined = layers.Activation('sigmoid', name="output_sigmoid")(combined)
         combined = layers.Flatten()(combined)
-
-
-
         model = tf.keras.models.Model(inputs, combined)
         return model
 
@@ -65,5 +93,6 @@ class SplitDenseNetFactory():
             time_model = layers.Multiply()([time_output, t_m1_input])
             model = layers.Concatenate(axis=3)([time_model, model])
             model = HadamardLayer()(model)
-            model = layers.Conv1D(1,1)(model)
+            model = layers.Lambda(lambda x: K.sum(x, axis=3))(model)
+            # model = layers.Conv1D(1,1, use_bias=False)(model)
             return model

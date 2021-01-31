@@ -10,7 +10,7 @@ class TimeEmbeddingFactory():
 
     def Model(self, input_shape):
         input = layers.Input(shape=input_shape, name = 'time_input')
-        model = layers.Dense(32, activation='tanh', name = 'time_1')(input)
+        model = layers.Dense(32, activation='linear', name = 'time_1')(input)
         model = layers.Dense(100*100, activation='tanh', name = 'time_2')(model)
         model = layers.Reshape((100,100,1))(model)
         return model, input

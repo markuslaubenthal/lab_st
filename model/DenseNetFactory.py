@@ -8,19 +8,25 @@ from .HadamardLayer import HadamardLayer
 from keras.regularizers import l2
 import numpy as np
 
+import tensorflow.keras.backend as K
+
 
 class DenseNetFactory():
 
     def __init__(self):
         self.concat_axis = 3
         self.eps = 1.1e-5
-        self.growth_rate = 4
+        self.growth_rate = 8
         self.initial_filters = 8
         self.num_conv_layer = 8
         self.weight_decay = 1e-4
         self.kernel_size = (3,3)
         self.kernel_regularizer = l2(self.weight_decay)
         self.use_bias = False
+
+
+        self.kernel_regularizer = None
+        self.use_bias = True
 
     def ConvLayer(self, x, name):
         x = layers.Conv2D(
@@ -45,9 +51,11 @@ class DenseNetFactory():
         return x
 
 
-    def Model(self, prefix="standard", input_shape=None):
-        input = layers.Input(shape=input_shape, name = prefix + '_input')
+    def Model(self, prefix="standard", input_shape=None, input=None):
+        if input is None:
+            input = layers.Input(shape=input_shape, name = prefix + '_input')
         x = self.ConvLayer(input, prefix + '_init_conv')
+        # x = input
         concatenationLayer = None
         for i in range(self.num_conv_layer):
             x = self.DenseLayer(x, prefix, i)
@@ -56,8 +64,10 @@ class DenseNetFactory():
             else:
                 concatenationLayer = layers.Concatenate(axis=self.concat_axis)([x, concatenationLayer])
                 x = concatenationLayer
+        # model = layers.Conv1D(4,1, use_bias=False)(x) #Add activation Layer
+        # model = layers.Activation('linear')(model)
+        model = layers.Conv2D(self.growth_rate, self.kernel_size)(x)
         model = HadamardLayer(name = prefix + "_hadamard1")(x)
-        model = layers.Conv1D(1,1)(model) #Add activation Layer
-        model = layers.Activation('relu')(model)
+        model = layers.Conv1D(1,1, use_bias=False)(model)
         model = HadamardLayer(name = prefix + "_hadamard2")(model)
         return model, input
