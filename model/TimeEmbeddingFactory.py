@@ -1,3 +1,5 @@
+# Author: Markus Laubenthal
+
 import tensorflow as tf
 from tensorflow.keras import layers
 

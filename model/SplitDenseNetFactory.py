@@ -1,3 +1,5 @@
+# Author: Markus Laubenthal
+
 from .DenseNetFactory import DenseNetFactory
 from .TimeEmbeddingFactory import TimeEmbeddingFactory
 import tensorflow as tf
